@@ -5,7 +5,6 @@ import datetime
 import numpy as np
 import config
 
-
 def get_json_df(url, expand_col):
     resp = requests.get(url)
     data = resp.json()
@@ -39,8 +38,7 @@ def get_eth(address):
 
     #sort and drop duplicate on hash because token pull will have identical hash,
     compile_df['timeStamp'] = compile_df['timeStamp'].apply(lambda row: str(datetime.datetime.fromtimestamp(int(row))))
-    compile_df = compile_df.sort_values(by=['timeStamp', 'contractAddress'])
-    compile_df = compile_df.drop_duplicates(subset=['hash'], keep='first')
+    compile_df = compile_df.sort_values(by=['timeStamp', 'contractAddress']).drop_duplicates(subset=['hash'], keep='first')
 
     #make blank contract addresses Ethereum
     compile_df['query'] = address
@@ -54,5 +52,6 @@ def get_eth(address):
 
     compile_df.to_csv(config.test_fname, index=False)
 
-
-get_eth(config.test_eth_addy)
+#Bitcoin: Can take XPub
+def get_bitcoin(address):
+    url = 'https://blockchain.info/multiaddr?active=$'.format(address)
